@@ -28,9 +28,7 @@ import okhttp3.Response;
 
 public class ResultsActivity extends AppCompatActivity {
     private String filepath;
-    private TextView classification;
     private TextView venomStatus;
-    private TextView moreInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +96,7 @@ public class ResultsActivity extends AppCompatActivity {
         // 2: more info on class
         String[] classificationInfo = response.split(",");
 
-        classification = findViewById(R.id.classification);
+        TextView classification = findViewById(R.id.classification);
         classification.setText(classificationInfo[0]);
 
         venomStatus = findViewById(R.id.venomStatus);
@@ -114,7 +112,7 @@ public class ResultsActivity extends AppCompatActivity {
             });
         }
 
-        moreInfo = findViewById(R.id.moreInfo);
+        TextView moreInfo = findViewById(R.id.moreInfo);
         moreInfo.setText(classificationInfo[2]);
     }
 

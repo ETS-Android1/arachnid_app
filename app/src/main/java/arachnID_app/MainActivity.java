@@ -20,19 +20,11 @@ import android.view.View;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
-
-    public void colorClick(View v) {
-        int Red = (int) Math.floor(Math.random()*(256));
-        int Green = (int) Math.floor(Math.random()*(256));
-        int Blue = (int) Math.floor(Math.random()*(256));
-        v.setBackgroundColor(android.graphics.Color.rgb(Red, Green, Blue));
     }
 
     public void moveToCamera(View v) {
