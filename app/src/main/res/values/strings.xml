@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">arachnID</string>
+    <string name="button">Go To Camera</string>
+    <string name="switch0">Off.</string>
+    <string name="switch1">On.</string>
+    <string name="mainTitle">ArachnID</string>
+    <string name="mainCameraPrompt">Open Camera</string>
+    <string name="venomTrue">This color is venomous!</string>
+    <string name="venomFalse">This color is not venomous.</string>
+</resources>
