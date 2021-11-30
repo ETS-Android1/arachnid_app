@@ -38,6 +38,7 @@ public class CameraActivity extends AppCompatActivity {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ImageCapture imageCapture;
 
+    // Sets the Activity's display and prompts camera access permission check
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +46,13 @@ public class CameraActivity extends AppCompatActivity {
         previewView = findViewById(R.id.previewView);
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 100);
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, 100); // Request code arbitrary, unused elsewhere
         }
 
         setViewFinder();
     }
 
+    // Requests a CameraProvider and creates a listener
     public void setViewFinder() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this);
         cameraProviderFuture.addListener(() -> { // lambda expression replacing Runnable()
@@ -63,9 +65,12 @@ public class CameraActivity extends AppCompatActivity {
         }, ContextCompat.getMainExecutor(this));
     }
 
+    // Attaches new image preview to display element, binds camera to Activity lifecycle
     protected void viewFinder(ProcessCameraProvider cameraProvider) {
         Preview preview = new Preview.Builder().build();
         CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
+
+        // COMPATIBLE ImplementationMode uses a TextureView for the preview; when using a SurfaceView (PERFORMANCE), app slows down tremendously
         previewView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
@@ -75,10 +80,10 @@ public class CameraActivity extends AppCompatActivity {
         cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, preview);
     }
 
+    // onClick method of Camera button, specifies a filepath and saves the captured image to it
     public void takePhoto(View v) {
         File path = new File(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "img_" + System.currentTimeMillis() + ".jpeg");
         ImageCapture.OutputFileOptions imageCaptureOptions = new ImageCapture.OutputFileOptions.Builder(path).build();
-        System.out.println(imageCapture.getTargetRotation());
         imageCapture.takePicture(imageCaptureOptions, Executors.newCachedThreadPool(), new ImageCapture.OnImageSavedCallback() {
             @Override
             public void onImageSaved(ImageCapture.OutputFileResults outputFileResults) {
@@ -91,6 +96,7 @@ public class CameraActivity extends AppCompatActivity {
         });
     }
 
+    // Move to Results Activity
     public void moveToResults(File file) {
         Intent results = new Intent(this, ResultsActivity.class);
         results.putExtra("IMG_FILE", file.getPath());

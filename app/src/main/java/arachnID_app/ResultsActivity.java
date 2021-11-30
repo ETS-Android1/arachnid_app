@@ -30,6 +30,7 @@ public class ResultsActivity extends AppCompatActivity {
     private String filepath;
     private TextView venomStatus;
 
+    // Sets the Activity's display and notifies user of image save location
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,16 +38,12 @@ public class ResultsActivity extends AppCompatActivity {
 
         if (getIntent().getStringExtra("IMG_FILE") != null) {
             filepath = getIntent().getStringExtra("IMG_FILE");
+            // Text popup at bottom of screen
             Toast toast = Toast.makeText(getApplicationContext(),filepath, Toast.LENGTH_LONG);
             toast.show();
         } else {
             returnToMain(findViewById(R.id.backButton));
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         try {
             uploadImage(filepath);
@@ -55,19 +52,23 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
+    // Sets image display, sends POST request to server
     public void uploadImage(String path) throws IOException {
-        ImageView classifiedImage = findViewById(R.id.classifiedImage);
         OkHttpClient client = new OkHttpClient();
-        String url = "https://www.arachnid.app/img_upload";
         File file = new File(path);
-        classifiedImage.setImageURI(Uri.fromFile(file));
+        String url = "https://www.arachnid.app/img_upload";
         MediaType MEDIA_TYPE_IMG = MediaType.parse("image/jpeg");
+
+        // Set ImageView in Results Activity to the user's photo -- might eventually replace with generic image of the detected species
+        ImageView classifiedImage = findViewById(R.id.classifiedImage);
+        classifiedImage.setImageURI(Uri.fromFile(file));
 
         Request request = new Request.Builder()
                 .url(url)
                 .post(RequestBody.create(file, MEDIA_TYPE_IMG))
                 .build();
 
+        // .enqueue() instead of .execute() -- allows for interruption and better error handling if necessary
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -76,8 +77,8 @@ public class ResultsActivity extends AppCompatActivity {
                     response.close();
                     handleResponse(responseString);
                 } else {
-                    System.out.println(request.body());
-                    System.out.println(response);
+                    // System.out.println(request.body());
+                    // System.out.println(response);
                     response.close();
                 }
             }
@@ -90,18 +91,19 @@ public class ResultsActivity extends AppCompatActivity {
         });
     }
 
+    // Populates display with parsed server response data
     public void handleResponse(String response) {
+        String[] classificationInfo = response.split(",");
         // 0: name of class (species)
         // 1: venom status, 0 or 1
         // 2: more info on class
-        String[] classificationInfo = response.split(",");
 
         TextView classification = findViewById(R.id.classification);
         classification.setText(classificationInfo[0]);
 
         venomStatus = findViewById(R.id.venomStatus);
         if (classificationInfo[1].equals("1")) {
-            runOnUiThread(() -> {
+            runOnUiThread(() -> { // only Main Activity can set UI fields dynamically, have to run all other activity changes on UiThread
                 venomStatus.setText(R.string.venomTrue);
                 venomStatus.setBackgroundColor(android.graphics.Color.rgb(255, 117, 112)); // Red
             });
@@ -116,9 +118,10 @@ public class ResultsActivity extends AppCompatActivity {
         moreInfo.setText(classificationInfo[2]);
     }
 
+    // onClick method of back button, allows the user to return to the Main Activity (the initial 'page')
     public void returnToMain(View v) {
         Intent main = new Intent(this, MainActivity.class);
-        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        main.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clears Activity stack so that each use of the app doesn't build infinitely on top of itself
         startActivity(main);
     }
 

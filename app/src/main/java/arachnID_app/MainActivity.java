@@ -21,12 +21,14 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Sets the Activity's display
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
 
+    // Moves to Camera Activity
     public void moveToCamera(View v) {
         Intent camera = new Intent(this, CameraActivity.class);
         startActivity(camera);
