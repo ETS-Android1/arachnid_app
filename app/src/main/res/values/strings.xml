@@ -5,6 +5,12 @@
     <string name="switch1">On.</string>
     <string name="mainTitle">ArachnID</string>
     <string name="mainCameraPrompt">Open Camera</string>
-    <string name="venomTrue">This color is venomous!</string>
-    <string name="venomFalse">This color is not venomous.</string>
+    <string name="venomHigh">Highly venomous!</string>
+    <string name="venomMed">Mildly venomous - low risk.</string>
+    <string name="venomLow">Unlikely to be venomous.</string>
+    <string name="cameraButtonDescription">take photo</string>
+    <string name="uploading_to_server">Uploading To Server …</string>
+    <string name="mainSubtitle">A Spider Identification App</string>
+    <string name="conn_failure">Connection To Server Failed</string>
+    <string name="conn_noresponse">No Response From Server</string>
 </resources>

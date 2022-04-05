@@ -8,15 +8,28 @@
 
     <TextView
         android:id="@+id/mainTitle"
-        android:layout_width="196dp"
-        android:layout_height="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/mainTitle"
-        android:textSize="48sp"
+        android:textSize="56sp"
+        android:textColor="#062040"
         app:layout_constraintBottom_toTopOf="@+id/cameraButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/mainSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:text="@string/mainSubtitle"
+        app:layout_constraintTop_toBottomOf="@+id/mainTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/mainCameraPrompt"
@@ -32,8 +45,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cameraButton"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:backgroundTint="#FFFF6C6C"
         android:gravity="center"
         android:insetLeft="0dp"
@@ -41,13 +54,13 @@
         android:insetRight="0dp"
         android:insetBottom="0dp"
         android:onClick="moveToCamera"
-        app:cornerRadius="70dp"
+        app:cornerRadius="90dp"
         app:icon="@drawable/ic_launcher_foreground"
-        app:iconTint="#FF001228"
-        app:iconSize="150dp"
+        app:iconTint="#FFC7C7"
+        app:iconSize="180dp"
         app:iconPadding="0dp"
         app:iconGravity="textTop"
-        app:strokeColor="#FF001228"
+        app:strokeColor="#FFC7C7"
         app:strokeWidth="5dp"
         app:layout_constraintBottom_toTopOf="@+id/mainCameraPrompt"
         app:layout_constraintEnd_toEndOf="parent"

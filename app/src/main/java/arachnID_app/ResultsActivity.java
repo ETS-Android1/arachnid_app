@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,6 +31,7 @@ import okhttp3.Response;
 public class ResultsActivity extends AppCompatActivity {
     private String filepath;
     private TextView venomStatus;
+    private RelativeLayout loadingLayout;
 
     // Sets the Activity's display and notifies user of image save location
     @Override
@@ -54,7 +57,9 @@ public class ResultsActivity extends AppCompatActivity {
 
     // Sets image display, sends POST request to server
     public void uploadImage(String path) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .build();
         File file = new File(path);
         String url = "https://www.arachnid.app/img_upload";
         MediaType MEDIA_TYPE_IMG = MediaType.parse("image/jpeg");
@@ -79,6 +84,8 @@ public class ResultsActivity extends AppCompatActivity {
                 } else {
                     // System.out.println(request.body());
                     // System.out.println(response);
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.conn_noresponse, Toast.LENGTH_LONG);
+                    toast.show();
                     response.close();
                 }
             }
@@ -86,6 +93,8 @@ public class ResultsActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 System.out.println("onFailure called");
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.conn_failure, Toast.LENGTH_LONG);
+                toast.show();
                 returnToMain(findViewById(R.id.backButton));
             }
         });
@@ -93,24 +102,34 @@ public class ResultsActivity extends AppCompatActivity {
 
     // Populates display with parsed server response data
     public void handleResponse(String response) {
-        String[] classificationInfo = response.split(",");
+        String[] classificationInfo = response.split("\\|");
         // 0: name of class (species)
-        // 1: venom status, 0 or 1
+        // 1: venom status, 0 1 or 2
         // 2: more info on class
+
+        runOnUiThread(() -> { // remove loading icon
+            loadingLayout = findViewById(R.id.loadingLayout);
+            loadingLayout.setVisibility(View.GONE);
+        });
 
         TextView classification = findViewById(R.id.classification);
         classification.setText(classificationInfo[0]);
 
         venomStatus = findViewById(R.id.venomStatus);
-        if (classificationInfo[1].equals("1")) {
+        if (classificationInfo[1].equals("0")) {
             runOnUiThread(() -> { // only Main Activity can set UI fields dynamically, have to run all other activity changes on UiThread
-                venomStatus.setText(R.string.venomTrue);
-                venomStatus.setBackgroundColor(android.graphics.Color.rgb(255, 117, 112)); // Red
-            });
-        } else { // classificationInfo[1].equals("0")
-            runOnUiThread(() -> {
-                venomStatus.setText(R.string.venomFalse);
+                venomStatus.setText(R.string.venomLow);
                 venomStatus.setBackgroundColor(android.graphics.Color.rgb(74, 176, 91)); // Green
+            });
+        } else if (classificationInfo[1].equals("1")) {
+            runOnUiThread(() -> {
+                venomStatus.setText(R.string.venomMed);
+                venomStatus.setBackgroundColor(android.graphics.Color.rgb(229, 214, 126)); // Yellow
+            });
+        } else { // classificationInfo[1].equals("2")
+            runOnUiThread(() -> {
+                venomStatus.setText(R.string.venomHigh);
+                venomStatus.setBackgroundColor(android.graphics.Color.rgb(255, 117, 112)); // Red
             });
         }
 

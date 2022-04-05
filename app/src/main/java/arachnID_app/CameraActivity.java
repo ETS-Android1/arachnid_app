@@ -1,11 +1,14 @@
 package arachnID_app;
 
+import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Size;
 import android.view.Surface;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
@@ -74,7 +78,9 @@ public class CameraActivity extends AppCompatActivity {
         previewView.setImplementationMode(PreviewView.ImplementationMode.COMPATIBLE);
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-        imageCapture = new ImageCapture.Builder().build();
+        imageCapture = new ImageCapture.Builder()
+                .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setTargetResolution(new Size(600,600)).build();
 
         cameraProvider.unbindAll();
         cameraProvider.bindToLifecycle(this, cameraSelector, imageCapture, preview);
