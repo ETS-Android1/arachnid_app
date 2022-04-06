@@ -4,7 +4,7 @@ This project provides a tool for identifying spiders found within the home. This
 
 ## Installation and Usage
 
-This repository supplies the project's APK file. It has been tested and confirms compatibility with Android version 8.0, “Oreo”, and above.
+This repository supplies the project's APK file, found in app/release/Arachnid-release.apk. It has been tested and confirms compatibility with Android version 8.0, “Oreo”, and above.
 When using the Android Studio emulator, a test image hosted [here](https://www.arachnid.app/static/test_array.png) can be used in the simulated environment to test functionality of the app on the four identifiable species.
 
 ## About the Project
